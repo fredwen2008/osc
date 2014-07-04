@@ -134,6 +134,7 @@ def load_pkgs(dumpfile):
     
     #line ="00:57:50.572421 IP 10.66.187.138.55281 > 10.66.187.133.5672: Flags [P.], seq 2659789087:2659789139, ack 588382243, win 131, options [nop,nop,TS val 2521697547 ecr 3939207681], length 52"
     file_object = open(dumpfile)
+    ##todo:close file
     #lines = file_object.readlines()
     regexp = "IP(.*) > (.*): Flags.*seq (\d+):(\d+).*length (\d+)"
     for line in file_object:
@@ -157,7 +158,6 @@ def load_pkgs(dumpfile):
     if(packets):
         p=packets[-1]
         if(p["content"]):
-            #print p['content']
             p['content']=p["content"][len(p["content"])-p['length']-1:len(p["content"])]
 
 
@@ -173,21 +173,8 @@ def print_pkgs(packets):
             print "%s -> %s: rpc %s" %(packet["FROM"],packet["TO"],packet['unique_id'])
         else:
             pass
-            #print 'wrong'
-#print sys.argv[1]
 load_pkgs(sys.argv[1])
-
-
 merge_pkgs(packets)
-'''
-for packet in merged:
-    regexp = "ADMIN_PASS"
-    r = re.search( regexp, packet['content'])
-    if(r):
-        print 'merged packet=========:', packet['content']
-'''
-
-
 format_pkgs(merged)
 print_pkgs(merged)
 
