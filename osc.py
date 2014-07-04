@@ -77,8 +77,7 @@ def merge_pkgs(pkgs):
                 break
         if ( completed==0 ):
             merged.append(p)
-            #print p['content']
-            #print len(p['content'])
+
     
 def format_json(inputtext):
     match= re.match("(.*?oslo\.message.{3})(\{.*\})",inputtext,re.DOTALL)
@@ -87,21 +86,16 @@ def format_json(inputtext):
     if match:
         head=match.groups()[0]
         json_text=match.groups()[1];
-        #print "before",json_text
         json_text=json_text.replace("\n","").replace('\r','')
-        #print "afer",json_text
 
         inputtext=head+"\n"+json.dumps(json_class.raw_decode(json_text),indent=4)
         return inputtext
     elif httpmatch:
         payloadmatch=re.match("(.*?)(\{.*\})",inputtext,re.DOTALL)
-        #print "inputtext===",inputtext
         if payloadmatch:
-            #print "matchs=====",payloadmatch.groups()
             head=payloadmatch.groups()[0]
             json_text=payloadmatch.groups()[1]
             json_text=json_text.replace("\n","").replace('\r','')
-            #print json_text
             inputtext=head+json.dumps(json_class.raw_decode(json_text),indent=4)
         return inputtext
     else:
@@ -183,7 +177,6 @@ def print_pkgs(packets):
 #print sys.argv[1]
 load_pkgs(sys.argv[1])
 
-#load_pkgs("/home/hubing/Documents/work/deployment/packetanalysis/root/wenfeng")
 
 merge_pkgs(packets)
 '''
@@ -198,8 +191,3 @@ for packet in merged:
 format_pkgs(merged)
 print_pkgs(merged)
 
-
-#for pk in packets:
-#    print json.dumps(pk['content']) 
-
-#print translate_ipport('119.220.22.11.30001')
