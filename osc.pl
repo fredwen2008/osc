@@ -150,7 +150,7 @@ sub load_pkgs {
 			$pkg->{'sec'}     = $sec;
 			$pkg->{'micro'}   = $micro;
 
-			$pkg->{'timestamp'} = ( ( $hour * 60 * 60 + $min * 60 + $sec ) * 1000000 + $micro ) / 1000;
+			$pkg->{'timestamp'} = int ( ( $hour * 60 * 60 + $min * 60 + $sec ) * 1000 + $micro / 1000);
 			if (@packages) {
 				my $p = $packages[-1];
 				$p->{'content'} = substr( $p->{'content'}, 0 - $p->{'length'} );
@@ -194,7 +194,7 @@ sub merge_pkgs {
 			} elsif ( $n->{'from'} eq $p->{'to'}
 				and $n->{'to'} eq $p->{'from'} )
 			{
-				$n->{'cost'} = int( $n->{'timestamp'} - $p->{'timestamp'} );
+				$n->{'cost'} = $n->{'timestamp'} - $p->{'timestamp'};
 				$completed = 1;
 				push @merged, $p;
 				last;
@@ -247,7 +247,7 @@ sub skip_pkgs {
 			my $timestamp = $req_pkg->{'timestamp'};
 			for ( my $j = $i + 1 ; $j <= $#merged ; $j++ ) {
 				my $rsp_pkg = $merged[$j];
-				if (    $req_pkg->{'msg_type'} eq 'RPC'
+				if (    $rsp_pkg->{'msg_type'} eq 'RPC'
 					and !$rsp_pkg->{'is_request'}
 					and $req_pkg->{'reply_q'} eq $rsp_pkg->{'reply_q0'} )
 				{
